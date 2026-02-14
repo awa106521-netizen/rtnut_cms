@@ -1,0 +1,46 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_title %}配色管理 - RTNUT 后台管理系统{% endblock %}
+
+{% block admin_content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-palette me-2"></i> 主题配色管理
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="mb-3">
+                <label for="theme_color" class="form-label">主题色（十六进制） <span class="text-danger">*</span></label>
+                <div class="input-group">
+                    <input type="color" class="form-control form-control-color" id="theme_color" name="theme_color" 
+                           value="{{ theme_color }}" title="选择主题色">
+                    <input type="text" class="form-control" id="theme_color_text" name="theme_color" 
+                           value="{{ theme_color }}" placeholder="#000000" required>
+                </div>
+                <div class="form-text">修改后前台的主题色会同步更新（如导航、按钮、标题等）</div>
+            </div>
+            
+            <button type="submit" class="btn btn-theme">保存配色</button>
+        </form>
+
+        <!-- 预览 -->
+        <div class="mt-4">
+            <h5>预览效果</h5>
+            <div style="width: 100px; height: 100px; background-color: {{ theme_color }}; border-radius: 8px;"></div>
+            <button class="btn mt-2" style="background-color: {{ theme_color }}; color: white;">预览按钮样式</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 颜色选择器和文本框同步
+document.getElementById('theme_color').addEventListener('input', function() {
+    document.getElementById('theme_color_text').value = this.value;
+});
+document.getElementById('theme_color_text').addEventListener('input', function() {
+    document.getElementById('theme_color').value = this.value;
+});
+</script>
+{% endblock %}

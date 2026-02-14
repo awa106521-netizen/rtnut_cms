@@ -1,0 +1,120 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_title %}厂容厂貌管理 - RTNUT 后台管理系统{% endblock %}
+
+{% block admin_content %}
+<!-- 添加/编辑厂容厂貌 -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-building me-2"></i> {% if edit_asset %}编辑资源{% else %}添加厂容厂貌{% endif %}
+    </div>
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="asset_id" value="{{ edit_asset.id if edit_asset else '' }}">
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="title" class="form-label">标题 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="title" name="title" 
+                           value="{{ edit_asset.title if edit_asset else '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="type" class="form-label">类型 <span class="text-danger">*</span></label>
+                    <select class="form-select" id="type" name="type" required>
+                        <option value="image" {% if edit_asset and edit_asset.type == 'image' %}selected{% endif %}>图片</option>
+                        <option value="video" {% if edit_asset and edit_asset.type == 'video' %}selected{% endif %}>视频</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="sort" class="form-label">排序（数字越小越靠前）</label>
+                    <input type="number" class="form-control" id="sort" name="sort" 
+                           value="{{ edit_asset.sort if edit_asset else 0 }}">
+                </div>
+                <div class="col-md-6">
+                    <label for="file" class="form-label">文件 {% if not edit_asset %}<span class="text-danger">*</span>{% endif %}</label>
+                    <input class="form-control" type="file" id="file" name="file" 
+                           accept="{% if edit_asset and edit_asset.type == 'video' %}video/*{% else %}image/*{% endif %}" 
+                           {% if not edit_asset %}required{% endif %}>
+                    {% if edit_asset %}
+                    <div class="mt-2">
+                        <small class="text-muted">当前文件：</small>
+                        {% if edit_asset.type == 'image' %}
+                        <img src="{{ edit_asset.file_path }}" width="100" alt="{{ edit_asset.title }}">
+                        {% else %}
+                        <video width="100" controls>
+                            <source src="{{ edit_asset.file_path }}" type="video/mp4">
+                        </video>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-theme">{% if edit_asset %}保存修改{% else %}添加资源{% endif %}</button>
+            {% if edit_asset %}
+            <a href="{{ url_for('admin_factory') }}" class="btn btn-secondary ms-2">取消</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- 厂容厂貌资源列表 -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-list me-2"></i> 资源列表
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>标题</th>
+                        <th>类型</th>
+                        <th>文件预览</th>
+                        <th>排序</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for asset in factory_assets %}
+                    <tr>
+                        <td>{{ asset.id }}</td>
+                        <td>{{ asset.title }}</td>
+                        <td>
+                            {% if asset.type == 'image' %}
+                            <span class="badge bg-primary">图片</span>
+                            {% else %}
+                            <span class="badge bg-info">视频</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if asset.type == 'image' %}
+                            <img src="{{ asset.file_path }}" width="100" alt="{{ asset.title }}">
+                            {% else %}
+                            <video width="100" controls>
+                                <source src="{{ asset.file_path }}" type="video/mp4">
+                                您的浏览器不支持视频播放
+                            </video>
+                            {% endif %}
+                        </td>
+                        <td>{{ asset.sort }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_factory', edit=asset.id) }}" class="btn btn-sm btn-primary me-2">编辑</a>
+                            <a href="{{ url_for('delete_factory_asset', asset_id=asset.id) }}" class="btn btn-sm btn-danger btn-delete">删除</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">暂无厂容厂貌资源</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

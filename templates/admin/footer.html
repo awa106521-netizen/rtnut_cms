@@ -1,0 +1,60 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_title %}页脚管理 - RTNUT 后台管理系统{% endblock %}
+
+{% block admin_content %}
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-info-circle me-2"></i> 页脚/联系信息管理
+    </div>
+    <div class="card-body">
+        <form method="POST">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="address" class="form-label">公司地址 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="address" name="address" 
+                           value="{{ footer_info.address }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="phone" class="form-label">联系电话 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="phone" name="phone" 
+                           value="{{ footer_info.phone }}" required>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="wechat" class="form-label">微信公众号</label>
+                    <input type="text" class="form-control" id="wechat" name="wechat" 
+                           value="{{ footer_info.wechat }}">
+                </div>
+                <div class="col-md-6">
+                    <label for="weibo" class="form-label">微博链接</label>
+                    <input type="url" class="form-control" id="weibo" name="weibo" 
+                           value="{{ footer_info.weibo }}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="email" class="form-label">邮箱地址 <span class="text-danger">*</span></label>
+                    <input type="email" class="form-control" id="email" name="email" 
+                           value="{{ footer_info.email }}" required>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-theme">保存页脚信息</button>
+        </form>
+
+        <!-- 预览 -->
+        <div class="mt-4 p-4 bg-dark text-white rounded">
+            <h5>页脚预览</h5>
+            <p><i class="bi bi-geo-alt me-2"></i> {{ footer_info.address }}</p>
+            <p><i class="bi bi-telephone me-2"></i> {{ footer_info.phone }}</p>
+            <p><i class="bi bi-wechat me-2"></i> {{ footer_info.wechat }}</p>
+            <p><i class="bi bi-weibo me-2"></i> <a href="{{ footer_info.weibo }}" class="text-white">微博</a></p>
+            <p><i class="bi bi-envelope me-2"></i> {{ footer_info.email }}</p>
+        </div>
+    </div>
+</div>
+{% endblock %}

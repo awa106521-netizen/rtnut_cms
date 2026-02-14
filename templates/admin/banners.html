@@ -1,0 +1,145 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_title %}Banner管理{% endblock %}
+
+{% block admin_content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h4>Banner管理
+                    <!-- 修复添加按钮：带add参数 -->
+                    <a href="{{ url_for('admin_banners', add=1) }}" class="btn btn-primary btn-sm float-end">添加Banner</a>
+                </h4>
+            </div>
+            <div class="card-body">
+                {% if edit_banner is not none %}
+                <!-- 添加/编辑Banner表单（含位置选择+富文本） -->
+                <form method="post" enctype="multipart/form-data">
+                    <!-- 隐藏字段：编辑时传递banner_id -->
+                    {% if edit_banner.id %}
+                    <input type="hidden" name="banner_id" value="{{ edit_banner.id }}">
+                    {% endif %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">基础标题（备用）</label>
+                        <input type="text" name="title" class="form-control" value="{{ edit_banner.title|default('', true) }}" placeholder="纯文本标题，备用显示" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">标题（富文本，支持字体/大小/颜色）</label>
+                        <textarea name="title_html" class="form-control ckeditor" rows="3">{{ edit_banner.title_html|default('', true) }}</textarea>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">Banner图片</label>
+                        <input type="file" name="image" class="form-control" {% if not edit_banner.id %}required{% endif %}>
+                        {% if edit_banner.id and edit_banner.image_path %}
+                        <div class="mt-2">
+                            <img src="{{ url_for('uploaded_file', filename=edit_banner.image_path.split('/')[-1]) }}" width="200" alt="当前Banner图片">
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">图片基础链接（可选）</label>
+                        <input type="text" name="link" class="form-control" value="{{ edit_banner.link|default('', true) }}" placeholder="点击Banner图片跳转的链接">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">按钮文字</label>
+                        <input type="text" name="button_text" class="form-control" value="{{ edit_banner.button_text|default('View More', true) }}" placeholder="按钮显示文字">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">按钮跳转链接</label>
+                        <input type="text" name="button_link" class="form-control" value="{{ edit_banner.button_link|default('', true) }}" placeholder="点击按钮跳转的链接">
+                    </div>
+                    
+                    <!-- 位置配置：适配后端的position_top/left字段 -->
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">文字顶部距离（如50px/20%）</label>
+                            <input type="text" name="position_top" class="form-control" value="{{ edit_banner.position_top|default('50px', true) }}" placeholder="示例：50px 或 20%" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">文字左侧距离（如50px/20%）</label>
+                            <input type="text" name="position_left" class="form-control" value="{{ edit_banner.position_left|default('50px', true) }}" placeholder="示例：50px 或 20%" required>
+                        </div>
+                    </div>
+                    
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label class="form-label">按钮顶部距离（如100px/30%）</label>
+                            <input type="text" name="button_position_top" class="form-control" value="{{ edit_banner.button_position_top|default('100px', true) }}" placeholder="示例：100px 或 30%" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label">按钮左侧距离（如50px/20%）</label>
+                            <input type="text" name="button_position_left" class="form-control" value="{{ edit_banner.button_position_left|default('50px', true) }}" placeholder="示例：50px 或 20%" required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label class="form-label">排序（数字越小越靠前）</label>
+                        <input type="number" name="sort" class="form-control" value="{{ edit_banner.sort|default(0, true) }}" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary">保存Banner</button>
+                    <a href="{{ url_for('admin_banners') }}" class="btn btn-secondary ms-2">取消</a>
+                </form>
+                {% else %}
+                <!-- Banner列表展示 -->
+                <table class="table table-bordered table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>ID</th>
+                            <th>标题预览</th>
+                            <th>Banner图片</th>
+                            <th>排序</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for banner in banners %}
+                        <tr>
+                            <td>{{ banner.id }}</td>
+                            <td>{{ banner.title_html|striptags|truncate(15) }}</td>
+                            <td><img src="{{ url_for('uploaded_file', filename=banner.image_path.split('/')[-1]) }}" width="80" class="rounded" alt="Banner"></td>
+                            <td>{{ banner.sort }}</td>
+                            <td>
+                                <a href="{{ url_for('admin_banners', edit=banner.id) }}" class="btn btn-sm btn-warning me-1">编辑</a>
+                                <a href="{{ url_for('delete_banner', banner_id=banner.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('确定删除该Banner吗？删除后无法恢复！')">删除</a>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="5" class="text-center text-muted py-3">暂无Banner数据，请点击右上角「添加Banner」</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 引入CKEditor富文本编辑器（无需本地安装，CDN加载） -->
+<script src="https://cdn.ckeditor.com/4.22.1/standard/ckeditor.js"></script>
+<script>
+    // 初始化标题富文本编辑器（精简工具栏，适合零基础操作）
+    CKEDITOR.replace('title_html', {
+        height: 120,
+        toolbar: [
+            ['Font', 'FontSize'], // 字体/字号
+            ['Bold', 'Italic', 'Underline'], // 加粗/斜体/下划线
+            ['TextColor', 'BGColor'], // 文字颜色/背景色
+            ['JustifyLeft', 'JustifyCenter', 'JustifyRight'], // 对齐方式
+            ['RemoveFormat'] // 清除格式
+        ],
+        // 简化字体/字号选项
+        font_names: '微软雅黑;宋体;黑体;Arial;Times New Roman;Courier New',
+        font_size_sizes: '12/12px;14/14px;16/16px;18/18px;20/20px;24/24px;30/30px;36/36px'
+    });
+</script>
+{% endblock %}

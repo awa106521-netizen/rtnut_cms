@@ -1,0 +1,110 @@
+{% extends "admin/base_admin.html" %}
+
+{% block admin_title %}产品管理 - RTNUT 后台管理系统{% endblock %}
+
+{% block admin_content %}
+<!-- 添加/编辑产品 -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-box me-2"></i> {% if edit_product %}编辑产品{% else %}添加产品{% endif %}
+    </div>
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="product_id" value="{{ edit_product.id if edit_product else '' }}">
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="title" class="form-label">产品标题 <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control" id="title" name="title" 
+                           value="{{ edit_product.title if edit_product else '' }}" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="price" class="form-label">产品价格</label>
+                    <input type="number" step="0.01" class="form-control" id="price" name="price" 
+                           value="{{ edit_product.price if edit_product else 0.00 }}">
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="description" class="form-label">产品简介</label>
+                    <textarea class="form-control" id="description" name="description" rows="3">{{ edit_product.description if edit_product else '' }}</textarea>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-12">
+                    <label for="detail" class="form-label">产品详情（支持HTML）</label>
+                    <textarea class="form-control" id="detail" name="detail" rows="6">{{ edit_product.detail if edit_product else '' }}</textarea>
+                    <div class="form-text">可输入HTML代码实现换行、加粗等格式</div>
+                </div>
+            </div>
+            
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="sort" class="form-label">排序（数字越小越靠前）</label>
+                    <input type="number" class="form-control" id="sort" name="sort" 
+                           value="{{ edit_product.sort if edit_product else 0 }}">
+                </div>
+                <div class="col-md-6">
+                    <label for="image" class="form-label">产品图片 {% if not edit_product %}<span class="text-danger">*</span>{% endif %}</label>
+                    <input class="form-control" type="file" id="image" name="image" accept="image/*" {% if not edit_product %}required{% endif %}>
+                    {% if edit_product %}
+                    <div class="mt-2">
+                        <small class="text-muted">当前图片：</small>
+                        <img src="{{ edit_product.image_path }}" width="100" alt="{{ edit_product.title }}">
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-theme">{% if edit_product %}保存修改{% else %}添加产品{% endif %}</button>
+            {% if edit_product %}
+            <a href="{{ url_for('admin_products') }}" class="btn btn-secondary ms-2">取消</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+<!-- 产品列表 -->
+<div class="card mb-4">
+    <div class="card-header">
+        <i class="bi bi-list me-2"></i> 产品列表
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>标题</th>
+                        <th>价格</th>
+                        <th>图片</th>
+                        <th>排序</th>
+                        <th>操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.title }}</td>
+                        <td>¥{{ product.price }}</td>
+                        <td><img src="{{ product.image_path }}" width="100" alt="{{ product.title }}"></td>
+                        <td>{{ product.sort }}</td>
+                        <td>
+                            <a href="{{ url_for('admin_products', edit=product.id) }}" class="btn btn-sm btn-primary me-2">编辑</a>
+                            <a href="{{ url_for('delete_product', product_id=product.id) }}" class="btn btn-sm btn-danger btn-delete">删除</a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">暂无产品数据</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
