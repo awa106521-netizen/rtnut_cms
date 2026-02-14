@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block front_title %}RTNUT - 极简设计，品质生活{% endblock %}</title>
+    <!-- Bootstrap 核心CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons 图标库 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <!-- 自定义样式（优化后的分层/间距/轮播） -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <!-- 动态主题色（从后台配置读取） -->
+    <style>
+        :root {
+            --theme-color: {{ theme_color if theme_color else '#000000' }};
+        }
+    </style>
+    <!-- 子模板自定义CSS扩展块 -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- 导航栏（固定顶部+滚动优化） -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container section-container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">RTNUT</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'index' %}active{% endif %}" href="{{ url_for('index') }}">首页</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'factory_page' %}active{% endif %}" href="{{ url_for('factory_page') }}">厂容厂貌</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.endpoint == 'contact' %}active{% endif %}" href="{{ url_for('contact') }}">联系我们</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主内容区（子模板填充） -->
+    {% block front_content %}{% endblock %}
+
+    <!-- 页脚（优化分层+间距） -->
+    <footer class="py-8">
+        <div class="container section-container">
+            <div class="row">
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h4>关于我们</h4>
+                    <p>RTNUT 致力于提供高品质的产品和服务，极简设计，品质生活。</p>
+                </div>
+                <div class="col-md-4 mb-4 mb-md-0">
+                    <h4>联系我们</h4>
+                    <p><i class="bi bi-geo-alt me-2"></i> {{ footer_info.address if footer_info else '暂无地址' }}</p>
+                    <p><i class="bi bi-telephone me-2"></i> {{ footer_info.phone if footer_info else '暂无电话' }}</p>
+                    <p><i class="bi bi-envelope me-2"></i> {{ footer_info.email if footer_info else '暂无邮箱' }}</p>
+                </div>
+                <div class="col-md-4">
+                    <h4>关注我们</h4>
+                    <p><i class="bi bi-wechat me-2"></i> {{ footer_info.wechat if footer_info else '暂无公众号' }}</p>
+                    <p><i class="bi bi-weibo me-2"></i> 
+                        {% if footer_info and footer_info.weibo %}
+                        <a href="{{ footer_info.weibo }}" class="text-decoration-underline">{{ footer_info.weibo }}</a>
+                        {% else %}
+                        暂无微博
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            <hr class="my-4 border-light-subtle">
+            <div class="text-center">
+                <p class="text-white-50">&copy; 2026 RTNUT. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JS 引入 -->
+    <!-- Bootstrap 核心JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- 全局通用JS（导航栏滚动效果） -->
+    <script>
+        // 导航栏滚动收缩效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('shadow-sm');
+                navbar.style.padding = '0.8rem 0';
+            } else {
+                navbar.classList.remove('shadow-sm');
+                navbar.style.padding = '1.2rem 0';
+            }
+        });
+
+        // 初始化触发一次滚动事件（解决页面加载时导航栏样式）
+        window.dispatchEvent(new Event('scroll'));
+    </script>
+    <!-- 子模板自定义JS扩展块 -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

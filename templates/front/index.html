@@ -1,0 +1,169 @@
+{% extends "front/base_front.html" %}
+
+{% block front_title %}首页 - RTNUT{% endblock %}
+
+{% block front_content %}
+<!-- Banner轮播区（支持后台位置调整+富文本） -->
+<section class="banner-section">
+    {% if banners and banners|length > 0 %}
+    <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+        <!-- 轮播内容 -->
+        <div class="carousel-inner">
+            {% for index in range(banners|length) %}
+            {% set banner = banners[index] %}
+            <div class="carousel-item {% if index == 0 %}active{% endif %}">
+                <!-- Banner图片（固定尺寸，防变形） -->
+                <img src="{{ banner.image_path }}" class="banner-img w-100" alt="RTNUT Banner">
+                
+                <!-- 根据后台配置的位置动态生成样式 -->
+                {% set position_style = '' %}
+                {% if banner.banner_position == 'top-left' %}
+                    {% set position_style = 'top: 8%; left: 8%; text-align: left; z-index: 10;' %}
+                {% elif banner.banner_position == 'top-right' %}
+                    {% set position_style = 'top: 8%; right: 8%; text-align: right; z-index: 10;' %}
+                {% elif banner.banner_position == 'bottom-left' %}
+                    {% set position_style = 'bottom: 8%; left: 8%; text-align: left; z-index: 10;' %}
+                {% elif banner.banner_position == 'bottom-right' %}
+                    {% set position_style = 'bottom: 8%; right: 8%; text-align: right; z-index: 10;' %}
+                {% elif banner.banner_position == 'center' %}
+                    {% set position_style = 'top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; z-index: 10;' %}
+                {% endif %}
+                
+                <!-- Banner文字/按钮容器（动态位置） -->
+                <div class="banner-caption" style="{{ position_style }}">
+                    <!-- 渲染富文本标题（保留所有样式） -->
+                    {% if banner.title_html %}
+                    <div class="banner-title">
+                        {{ banner.title_html|safe }}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- 渲染富文本按钮 -->
+                    {% if banner.button_html and banner.button_link %}
+                    <a href="{{ banner.button_link }}" class="banner-btn" style="border: none; background: transparent; padding: 0; margin-top: 1rem;">
+                        {{ banner.button_html|safe }}
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- 轮播控制按钮（左右切换） -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">上一张</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">下一张</span>
+        </button>
+    </div>
+    {% else %}
+    <!-- 无Banner时的占位 -->
+    <div class="d-flex align-items-center justify-content-center h-100 bg-dark text-white">
+        <div class="text-center p-5">
+            <h1 class="mb-4">暂无Banner</h1>
+            <p>请登录后台「Banner管理」添加图片和文字</p>
+        </div>
+    </div>
+    {% endif %}
+</section>
+
+<!-- 产品展示区（优化后固定尺寸，更美观） -->
+<section class="products-section">
+    <div class="section-container">
+        <h2 class="section-title">我们的产品</h2>
+        <div class="row g-4">
+            {% for product in products %}
+            <div class="col-md-4 col-sm-6">
+                <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-card h-100">
+                    <!-- 产品图片（固定高度，强制裁剪） -->
+                    <img src="{{ product.image_path }}" class="product-img w-100" alt="{{ product.title }}">
+                    <div class="product-info">
+                        <h3 class="product-title">{{ product.title }}</h3>
+                        <p class="product-price">¥{{ product.price }}</p>
+                        <p class="product-desc">{{ product.description|truncate(60) }}</p>
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="product-link">
+                            查看详情 <i class="bi bi-arrow-right"></i>
+                        </a>
+                    </div>
+                </a>
+            </div>
+            {% else %}
+            <div class="col-12 text-center text-muted py-8">
+                <h3>暂无产品</h3>
+                <p class="mt-2">请登录后台添加产品信息</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 厂容厂貌预览 -->
+<section class="factory-section bg-light">
+    <div class="section-container">
+        <h2 class="section-title">厂容厂貌</h2>
+        <div class="row g-4">
+            {% for asset in factory_assets %}
+            <div class="col-md-3 col-sm-6">
+                <div class="factory-card bg-white h-100">
+                    <img src="{{ asset.file_path }}" class="factory-img w-100" alt="{{ asset.title }}">
+                    <h3 class="factory-title text-center">{{ asset.title }}</h3>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center text-muted py-8">
+                <h3>暂无厂容厂貌资源</h3>
+                <p class="mt-2">请登录后台添加图片/视频资源</p>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="text-center mt-8">
+            <a href="{{ url_for('factory_page') }}" class="btn btn-theme">查看更多</a>
+        </div>
+    </div>
+</section>
+
+<!-- About区 -->
+<section class="about-section">
+    <div class="section-container">
+        <div class="row align-items-center">
+            <div class="col-md-6 mb-6 mb-md-0">
+                <img src="{{ url_for('static', filename='images/about.jpg') }}" class="about-img w-100" alt="关于我们">
+            </div>
+            <div class="col-md-6">
+                <h2 class="section-title text-start mb-4">关于我们</h2>
+                <p class="about-text">
+                    RTNUT 成立于2010年，是一家专注于高品质产品研发、生产和销售的企业。我们秉承"极简设计，品质生活"的理念，
+                    致力于为客户提供最优质的产品和服务。
+                </p>
+                <p class="about-text">
+                    我们拥有现代化的生产基地和专业的研发团队，严格把控每一个生产环节，确保产品的品质和性能。
+                </p>
+                <p class="about-text">
+                    多年来，我们始终坚持以客户为中心，以质量为生命，不断创新和改进，赢得了广大客户的信赖和支持。
+                </p>
+                <a href="{{ url_for('contact') }}" class="btn btn-theme">联系我们</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// 轮播初始化（兼容无Banner的情况）
+document.addEventListener('DOMContentLoaded', function() {
+    const carouselEl = document.getElementById('bannerCarousel');
+    if (carouselEl) {
+        const carousel = new bootstrap.Carousel(carouselEl, {
+            interval: 5000, // 5秒自动切换
+            pause: 'hover', // 鼠标悬停暂停
+            wrap: true,     // 循环播放
+            touch: true     // 支持触屏滑动
+        });
+    }
+});
+</script>
+{% endblock %}

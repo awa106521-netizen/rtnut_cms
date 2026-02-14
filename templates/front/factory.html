@@ -1,0 +1,58 @@
+{% extends "front/base_front.html" %}
+
+{% block front_title %}厂容厂貌 - RTNUT{% endblock %}
+
+{% block front_content %}
+<!-- 厂容厂貌头部 -->
+<section class="factory-header py-8">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="factory-header-title">厂容厂貌</h1>
+                <p class="factory-header-desc mt-4">走进我们的生产基地，了解产品的诞生过程</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 工厂图片 -->
+<section class="py-10 bg-light">
+    <div class="container">
+        <h2 class="section-title mb-8 text-center">工厂环境</h2>
+        <div class="row g-4">
+            {% for image in factory_images %}
+            <div class="col-md-4">
+                <div class="factory-photo-card">
+                    <img src="{{ image.file_path }}" class="factory-photo-img" alt="{{ image.title }}">
+                    <h3 class="factory-photo-title text-center mt-3">{{ image.title }}</h3>
+                </div>
+            </div>
+            {% else %}
+            <div class="col-12 text-center text-muted">暂无工厂图片</div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 工厂视频 -->
+{% if factory_videos %}
+<section class="py-10">
+    <div class="container">
+        <h2 class="section-title mb-8 text-center">工厂视频</h2>
+        <div class="row g-4">
+            {% for video in factory_videos %}
+            <div class="col-md-6">
+                <div class="factory-video-card">
+                    <video class="factory-video" controls>
+                        <source src="{{ video.file_path }}" type="video/mp4">
+                        您的浏览器不支持视频播放
+                    </video>
+                    <h3 class="factory-video-title text-center mt-3">{{ video.title }}</h3>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
