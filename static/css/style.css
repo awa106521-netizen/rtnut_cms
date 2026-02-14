@@ -1,0 +1,763 @@
+/* ======================================
+   全局基础样式（统一分层/间距/字体）
+   ====================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --theme-color: #000000;
+    --text-color: #333333;
+    --text-muted: #666666;
+    --bg-light: #f8f9fa;
+    --white: #ffffff;
+    --shadow: 0 5px 15px rgba(0,0,0,0.03);
+    --shadow-hover: 0 10px 20px rgba(0,0,0,0.08);
+    --transition: all 0.4s ease;
+    --section-spacing: 5rem 0;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    color: var(--text-color);
+    background-color: var(--white);
+    line-height: 1.8;
+    overflow-x: hidden;
+    padding-top: 86px;
+}
+
+a {
+    color: var(--theme-color);
+    text-decoration: none;
+    transition: var(--transition);
+}
+
+a:hover {
+    color: var(--text-muted);
+}
+
+/* 通用类 - 统一模块容器/间距 */
+.py-8 {
+    padding: 6rem 0;
+}
+
+.py-10 {
+    padding: 8rem 0;
+}
+
+.section-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+}
+
+.section-title {
+    font-size: 2.2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--theme-color);
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 2px;
+    background-color: var(--theme-color);
+}
+
+.btn-theme {
+    background-color: var(--theme-color);
+    color: var(--white);
+    border: none;
+    border-radius: 0;
+    padding: 0.8rem 2.5rem;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    transition: var(--transition);
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.btn-theme:hover {
+    background-color: var(--text-muted);
+    color: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+/* ======================================
+   导航栏样式（固定顶部+滚动优化）
+   ====================================== */
+.navbar {
+    background-color: var(--white) !important;
+    box-shadow: var(--shadow);
+    border-bottom: none;
+    padding: 1.2rem 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+}
+
+.navbar-brand {
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--theme-color) !important;
+}
+
+.nav-link {
+    color: var(--text-color) !important;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    margin-left: 1.5rem;
+    padding: 0.5rem 0 !important;
+    position: relative;
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--theme-color);
+    transition: var(--transition);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+/* ======================================
+   Banner轮播样式（支持后台位置调整+富文本）
+   ====================================== */
+.banner-section {
+    position: relative;
+    height: calc(100vh - 86px);
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+#bannerCarousel {
+    height: 100%;
+}
+
+.carousel-item {
+    height: 100%;
+    transition: transform 0.8s ease-in-out;
+}
+
+.banner-img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+/* Banner文字/按钮容器 - 基础样式（位置由后台控制） */
+.banner-caption {
+    position: absolute;
+    max-width: 600px;
+    color: #fff;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+
+/* Banner标题基础样式（富文本会覆盖） */
+.banner-title {
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* Banner按钮基础样式（富文本会覆盖） */
+.banner-btn {
+    display: inline-block;
+    transition: all 0.4s ease;
+}
+
+/* 轮播控制按钮 - 极简风格 */
+.carousel-control-prev, .carousel-control-next {
+    width: 8%;
+    opacity: 1;
+}
+
+.carousel-control-prev-icon, .carousel-control-next-icon {
+    width: 30px;
+    height: 30px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    background-size: 50% 50%;
+    transition: all 0.4s ease;
+}
+
+.carousel-control-prev-icon:hover, .carousel-control-next-icon:hover {
+    background-color: rgba(255,255,255,0.8);
+}
+
+/* 隐藏轮播指示器 */
+.carousel-indicators {
+    display: none;
+}
+
+/* ======================================
+   产品展示区样式（缩小+固定尺寸优化，核心！）
+   ====================================== */
+.products-section {
+    background-color: var(--white);
+    padding: var(--section-spacing);
+    margin-bottom: 2rem;
+}
+
+/* 产品卡片 - 固定尺寸+缩小美化 */
+.product-card {
+    display: block;
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px; /* 圆角更美观 */
+    box-shadow: var(--shadow);
+    transition: var(--transition);
+    height: 100%;
+    margin-bottom: 2rem;
+    max-width: 100%; /* 固定最大宽度 */
+    border: 1px solid #f0f0f0; /* 轻微边框，更精致 */
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* 缩小hover上移距离 */
+    box-shadow: var(--shadow-hover);
+}
+
+/* 产品图片 - 固定尺寸，强制裁剪（关键！防变形） */
+.product-img {
+    width: 100%;
+    height: 220px; /* 缩小图片高度，固定尺寸 */
+    object-fit: cover; /* 强制裁剪，保持比例 */
+    object-position: center; /* 居中显示 */
+    transition: var(--transition);
+    border-radius: 8px 8px 0 0; /* 图片圆角 */
+}
+
+.product-card:hover .product-img {
+    transform: scale(1.02); /* 缩小缩放比例 */
+}
+
+/* 产品信息区 - 缩小内边距，优化字体 */
+.product-info {
+    padding: 1.2rem; /* 缩小内边距 */
+    background-color: var(--white);
+}
+
+.product-title {
+    font-size: 1.1rem; /* 缩小字体 */
+    font-weight: 600;
+    margin-bottom: 0.5rem; /* 缩小间距 */
+    letter-spacing: 0.3px;
+    white-space: nowrap; /* 标题不换行 */
+    overflow: hidden; /* 超出隐藏 */
+    text-overflow: ellipsis; /* 省略号 */
+}
+
+.product-price {
+    color: #e63946; /* 价格红色，更醒目 */
+    font-weight: 600; /* 加粗价格 */
+    margin-bottom: 0.8rem; /* 缩小间距 */
+    font-size: 1rem; /* 缩小字体 */
+}
+
+.product-desc {
+    font-size: 0.9rem; /* 缩小描述字体 */
+    color: var(--text-muted);
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* 最多显示2行 */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 0.8rem;
+}
+
+.product-link {
+    font-size: 0.85rem; /* 缩小链接字体 */
+    color: var(--theme-color);
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+}
+
+.product-link i {
+    margin-left: 0.3rem; /* 缩小图标间距 */
+    transition: var(--transition);
+    font-size: 0.8rem;
+}
+
+.product-card:hover .product-link i {
+    transform: translateX(3px); /* 缩小图标移动距离 */
+}
+
+/* ======================================
+   产品详情页样式
+   ====================================== */
+.product-detail-section {
+    background-color: var(--white);
+    padding: var(--section-spacing);
+}
+
+.product-detail-img {
+    width: 100%;
+    height: auto;
+    max-height: 600px;
+    object-fit: cover;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.product-detail-title {
+    font-size: 2.3rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+}
+
+.product-detail-price {
+    font-weight: 600;
+    color: var(--theme-color);
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+}
+
+.product-detail-desc, .product-detail-content {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    line-height: 1.8;
+    margin-bottom: 2rem;
+}
+
+.related-products-section {
+    background-color: var(--bg-light);
+    padding: var(--section-spacing);
+}
+
+/* ======================================
+   厂容厂貌样式
+   ====================================== */
+.factory-section {
+    background-color: var(--bg-light);
+    padding: var(--section-spacing);
+    margin-bottom: 2rem;
+}
+
+.factory-header {
+    background-color: var(--white);
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+}
+
+.factory-header-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+.factory-header-desc {
+    color: var(--text-muted);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+.factory-card {
+    transition: var(--transition);
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    height: 100%;
+}
+
+.factory-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.factory-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 0;
+}
+
+.factory-title {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    padding: 1.5rem;
+    margin: 0;
+}
+
+/* 厂容厂貌详情页 */
+.factory-photo-card {
+    transition: var(--transition);
+    cursor: pointer;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+    height: 100%;
+}
+
+.factory-photo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.factory-photo-img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.factory-photo-card:hover .factory-photo-img {
+    opacity: 0.9;
+}
+
+.factory-photo-title {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-top: 1.5rem;
+    padding: 0 1.5rem 1.5rem;
+}
+
+.factory-video-card {
+    margin-bottom: 3rem;
+    background-color: var(--white);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+}
+
+.factory-video {
+    width: 100%;
+    height: 380px;
+    object-fit: cover;
+}
+
+.factory-video-title {
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    margin-top: 1.5rem;
+    padding: 0 1rem;
+}
+
+/* ======================================
+   About区样式
+   ====================================== */
+.about-section {
+    background-color: var(--white);
+    padding: var(--section-spacing);
+    margin-bottom: 2rem;
+}
+
+.about-img {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.about-text {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    line-height: 1.8;
+    margin-bottom: 1.5rem;
+}
+
+/* ======================================
+   联系我们样式
+   ====================================== */
+.contact-header {
+    background-color: var(--white);
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+}
+
+.contact-header-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+}
+
+.contact-header-desc {
+    color: var(--text-muted);
+    max-width: 800px;
+    margin: 0 auto;
+    line-height: 1.8;
+}
+
+.contact-info-card {
+    background-color: var(--white);
+    height: 100%;
+    box-shadow: var(--shadow);
+    padding: 3rem;
+    margin-bottom: 2rem;
+}
+
+.contact-info-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.contact-info-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--theme-color);
+}
+
+.contact-info-list li {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: flex-start;
+}
+
+.contact-info-list li i {
+    margin-right: 1rem;
+    color: var(--theme-color);
+    font-size: 1.3rem;
+    margin-top: 0.3rem;
+}
+
+.contact-form-card {
+    background-color: var(--white);
+    height: 100%;
+    box-shadow: var(--shadow);
+    padding: 3rem;
+    margin-bottom: 2rem;
+}
+
+.contact-form-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.contact-form-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 50px;
+    height: 2px;
+    background-color: var(--theme-color);
+}
+
+.form-control {
+    border-radius: 0;
+    border: 1px solid #ddd;
+    padding: 1.2rem;
+    font-size: 1rem;
+    margin-bottom: 1.5rem;
+    transition: var(--transition);
+}
+
+.form-control:focus {
+    border-color: var(--theme-color);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.05);
+}
+
+/* ======================================
+   页脚样式
+   ====================================== */
+footer {
+    background-color: #111111;
+    color: var(--white);
+    padding: 6rem 0 2rem;
+    margin-top: 4rem;
+}
+
+footer h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 2rem;
+    text-transform: uppercase;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+footer h4::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 1px;
+    background-color: #999;
+}
+
+footer p, footer a {
+    color: #999999;
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+footer a:hover {
+    color: var(--white);
+}
+
+footer .col-md-4 {
+    margin-bottom: 3rem;
+}
+
+/* ======================================
+   后台样式
+   ====================================== */
+.admin-sidebar {
+    min-height: calc(100vh - 56px);
+    background-color: #f8f9fa;
+    padding: 1rem;
+}
+
+.admin-content {
+    padding: 1.5rem;
+}
+
+.sidebar-link {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #333;
+    text-decoration: none;
+    border-radius: 0.25rem;
+}
+
+.sidebar-link:hover, .sidebar-link.active {
+    background-color: var(--theme-color);
+    color: white;
+}
+
+/* ======================================
+   响应式适配（全设备兼容）
+   ====================================== */
+@media (max-width: 992px) {
+    /* Banner适配 */
+    .banner-caption {
+        max-width: 400px;
+    }
+    .banner-title {
+        font-size: 2rem;
+    }
+
+    /* 通用适配 */
+    .section-title {
+        font-size: 2rem;
+    }
+    .product-detail-title {
+        font-size: 2rem;
+    }
+    .factory-header-title, .contact-header-title {
+        font-size: 2.2rem;
+    }
+    .product-img {
+        height: 200px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* 导航栏适配 */
+    .navbar-collapse {
+        background-color: var(--white);
+        padding: 1rem;
+        box-shadow: var(--shadow);
+        margin-top: 1rem;
+    }
+    .nav-link {
+        margin-left: 0;
+        padding: 1rem 0 !important;
+    }
+
+    /* Banner适配 */
+    .banner-caption {
+        max-width: 90%;
+    }
+    .banner-title {
+        font-size: 1.5rem;
+    }
+
+    /* 通用适配 */
+    .factory-img {
+        height: 200px;
+    }
+    .factory-photo-img {
+        height: 220px;
+    }
+    .factory-video {
+        height: 250px;
+    }
+    .py-8 {
+        padding: 3rem 0;
+    }
+    .py-10 {
+        padding: 4rem 0;
+    }
+    .contact-info-card, .contact-form-card {
+        padding: 2rem;
+    }
+    .product-img {
+        height: 180px;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Banner适配 */
+    .banner-section {
+        height: 60vh;
+    }
+    .banner-title {
+        font-size: 1.2rem;
+        margin-bottom: 1rem;
+    }
+
+    /* 通用适配 */
+    .section-title {
+        font-size: 1.8rem;
+        margin-bottom: 2rem;
+    }
+    .btn-theme {
+        padding: 0.6rem 1.5rem;
+        font-size: 0.9rem;
+    }
+    .product-img {
+        height: 150px;
+    }
+    body {
+        padding-top: 76px;
+    }
+}
